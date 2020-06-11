@@ -1,0 +1,3 @@
+# gungho, runtime-constants, mass_matrix,  iter_timestep_alg, rhs_alg, advection_alg, si_operators_alg, semi_implicit_solver, mixed_schur_preconditioner, helmholtz lhs, schur back substitute, mixed_operator ##### MPI first, then 6 thread OMP
+3250301.24, 35041.23, 303970.58, 3158562.15, 113414.29, 543214.23, 50521.89,  2205983.07, 1648026.60, 636986.05, 389821.13, 264480.65
+3015007.30, 0.0,      290219.61, 2975000.31, 181551.17, 514371.94, 104065.18, 2022099.74, 1425240.54, 596080.62, 292182.70, 264927.44
