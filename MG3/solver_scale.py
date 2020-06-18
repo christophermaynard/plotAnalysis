@@ -396,7 +396,18 @@ ts_rat1=kr_ts/mg_ts
 ts_rat2=kr6_ts/mg_ts
 #make2plots(nodes, pemg_ts, pekr_ts, pekr6_ts, ts_rat1, ts_rat2, "time-step")
 
-print(mg_wc-mg_ts)
-print(kr_wc-kr_ts)
-print(kr6_wc-kr6_ts)
 
+mg_si_op=np.fromstring('190.0, 94.0, 51.0, 25.0',dtype=float, sep=",")
+print(mg_si_op/mg_wc)
+print(mg_si_op/mg_ts)
+print(mg_si_op/mg_si)
+print(mg_si_op/mg_mp)
+print()
+kr_si_op=np.fromstring('133.0, 61.0, 32.0, 16.0',dtype=float, sep=",")
+print(kr_si_op/kr_wc)
+print(kr_si_op/kr_ts)
+print(kr_si_op/kr_si)
+print(kr_si_op/kr_mp)
+
+print()
+print(mg_si_op/kr_si_op)
