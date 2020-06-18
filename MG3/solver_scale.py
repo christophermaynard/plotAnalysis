@@ -403,6 +403,7 @@ print(mg_si_op/mg_ts)
 print(mg_si_op/mg_si)
 print(mg_si_op/mg_mp)
 print()
+#                                          16 is spoofed.
 kr_si_op=np.fromstring('133.0, 61.0, 32.0, 16.0',dtype=float, sep=",")
 print(kr_si_op/kr_wc)
 print(kr_si_op/kr_ts)
@@ -411,3 +412,5 @@ print(kr_si_op/kr_mp)
 
 print()
 print(mg_si_op/kr_si_op)
+
+print((mg_si_op-kr_si_op)/mg_mp)
