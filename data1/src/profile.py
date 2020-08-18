@@ -17,8 +17,8 @@ estem="/timer.txt"
 #alg_name="mass_matrix_solver"
 #alg_pos=1
 
-#alg_name="iter_timestep_alg"
-#alg_pos=2
+alg_name="iter_timestep_alg"
+alg_pos=2
 
 #alg_name="map_physics_fields"
 #alg_pos=3
@@ -29,8 +29,8 @@ estem="/timer.txt"
 #alg_name="advection_alg"
 #alg_pos=5
 
-alg_name="calc_phys_predictors"
-alg_pos=6
+#alg_name="calc_phys_predictors"
+#alg_pos=6
 
 #alg_name="semi_implicit_solver"
 #alg_pos=8
