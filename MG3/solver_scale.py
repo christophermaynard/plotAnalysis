@@ -1,4 +1,4 @@
-#!/usr/local/opt/python/libexec/bin/python
+##!/usr/local/opt/python/libexec/bin/python
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -95,13 +95,19 @@ def comms2plots(x, y1, y2, y3, z1, z2, z3):
     ax[0].set_xlim(xlim[0],xlim[1])
     ax[0].set_xscale('log')
     width1=0.1*x
-    rects1 = ax[1].bar(0.95*x, y1, width1, color='dodgerblue',label="MG",edgecolor='black')
-    rects2 = ax[1].bar(1.05*x, y2, width1, color='mediumblue',label="Kr2",edgecolor='black',hatch='//')
-    rects3 = ax[1].bar(1.15*x, y3, width1, color='skyblue',label="Kr6",edgecolor='black',hatch='\\\\')    
+#    rects1 = ax[1].bar(0.95*x, y1, width1, color='dodgerblue',label="MG",edgecolor='black')
+    rects1 = ax[1].bar(0.95*x, y1, width1, color='black',label="MG",edgecolor='black')
+#    rects2 = ax[1].bar(1.05*x, y2, width1, color='mediumblue',label="Kr2",edgecolor='black',hatch='//')
+    rects2 = ax[1].bar(1.05*x, y2, width1, color='gray',label="Kr2",edgecolor='black',hatch='//')
+#    rects3 = ax[1].bar(1.15*x, y3, width1, color='skyblue',label="Kr6",edgecolor='black',hatch='\\\\')
+    rects3 = ax[1].bar(1.15*x, y3, width1, color='lightgray',label="Kr6",edgecolor='black',hatch='\\\\')    
 
-    rects4 = ax[0].bar(0.95*x, z1, width1, color='firebrick',label="MG",edgecolor='black')
-    rects5 = ax[0].bar(1.05*x, z2, width1, color='goldenrod',label="Kr2",edgecolor='black',hatch='//')
-    rects6 = ax[0].bar(1.15*x, z3, width1, color='sienna',label="Kr6",edgecolor='black',hatch='\\\\')
+#    rects4 = ax[0].bar(0.95*x, z1, width1, color='firebrick',label="MG",edgecolor='black')
+    rects4 = ax[0].bar(0.95*x, z1, width1, color='dimgrey',label="MG",edgecolor='black')
+#    rects5 = ax[0].bar(1.05*x, z2, width1, color='goldenrod',label="Kr2",edgecolor='black',hatch='//')
+    rects5 = ax[0].bar(1.05*x, z2, width1, color='silver',label="Kr2",edgecolor='black',hatch='//')
+#    rects6 = ax[0].bar(1.15*x, z3, width1, color='sienna',label="Kr6",edgecolor='black',hatch='\\\\')
+    rects6 = ax[0].bar(1.15*x, z3, width1, color='whitesmoke',label="Kr6",edgecolor='black',hatch='\\\\')
 
     ax[1].minorticks_on()
     ax[1].set_xticks(x)
@@ -116,8 +122,10 @@ def comms2plots(x, y1, y2, y3, z1, z2, z3):
     ax[0].legend(loc='upper right')
         
     
-    fname="comms_scale.png"
+    fname="comms_scale_bw.png"
     plt.savefig(fname,format="png")
+    fname="comms_scale_bw.eps"
+    plt.savefig(fname,format="eps")    
     plt.show()    
 
 def make2plots(x, y1, y2, y3, z1, z2, name):
@@ -134,12 +142,16 @@ def make2plots(x, y1, y2, y3, z1, z2, name):
 
         
     width1=0.1*x
-    rects1 = ax[1].bar(0.95*x, y1, width1, color='dodgerblue',label="MG",edgecolor='black')
-    rects2 = ax[1].bar(1.05*x, y2, width1, color='mediumblue',label="Kr2",edgecolor='black',hatch='//')
-    rects3 = ax[1].bar(1.15*x, y3, width1, color='skyblue',label="Kr6",edgecolor='black',hatch='\\\\')
+#    rects1 = ax[1].bar(0.95*x, y1, width1, color='dodgerblue',label="MG",edgecolor='black')
+    rects1 = ax[1].bar(0.95*x, y1, width1, color='black',label="MG",edgecolor='black')
+#    rects2 = ax[1].bar(1.05*x, y2, width1, color='mediumblue',label="Kr2",edgecolor='black',hatch='//')
+    rects2 = ax[1].bar(1.05*x, y2, width1, color='gray',label="Kr2",edgecolor='black',hatch='//')
+    rects3 = ax[1].bar(1.15*x, y3, width1, color='lightgrey',label="Kr6",edgecolor='black',hatch='\\\\')
 
-    rects4 = ax[0].bar(0.95*x, z1, width1, color='teal',label="Kr2",edgecolor='black',hatch='--')
-    rects5 = ax[0].bar(1.05*x, z2, width1, color='powderblue',label="Kr6",edgecolor='black')
+#    rects4 = ax[0].bar(0.95*x, z1, width1, color='teal',label="Kr2",edgecolor='black',hatch='--')
+    rects4 = ax[0].bar(0.95*x, z1, width1, color='dimgrey',label="Kr2",edgecolor='black',hatch='--')    
+#    rects5 = ax[0].bar(1.05*x, z2, width1, color='powderblue',label="Kr6",edgecolor='black')
+    rects5 = ax[0].bar(1.05*x, z2, width1, color='whitesmoke',label="Kr6",edgecolor='black')
     
     ax[1].minorticks_on()
     ax[1].set_xticks(x)
@@ -154,8 +166,10 @@ def make2plots(x, y1, y2, y3, z1, z2, name):
     ax[0].legend(loc='upper left')#,bbox_to_anchor=(1.0,1.15))
         
     
-    fname=name+"_scale.png"
+    fname=name+"_scale_bw.png"
     plt.savefig(fname,format="png")
+    fname=name+"_scale_bw.eps"
+    plt.savefig(fname,format="eps")
     plt.show()    
 
 def plot4Data(x, ya1, ya2, yb1, yb2 ):
@@ -369,7 +383,7 @@ pekr6_mp=pedata(kr6_mp,nodes)
 
 mp_rat1=kr_mp/mg_mp
 mp_rat2=kr6_mp/mg_mp
-#make2plots(nodes, pemg_mp, pekr_mp, pekr6_mp, mp_rat1, mp_rat2, "pressure")
+make2plots(nodes, pemg_mp, pekr_mp, pekr6_mp, mp_rat1, mp_rat2, "pressure")
 
 smg_gs=mg_gs/400.0
 skr_gs=kr_gs/400.0
@@ -377,14 +391,14 @@ skr6_gs=kr6_gs/400.0
 smg_he=mg_he/400.0
 skr_he=kr_he/400.0
 skr6_he=kr6_he/400.0
-#comms2plots(nodes, smg_gs, skr_gs, skr6_gs, smg_he, skr_he, skr6_he)
+comms2plots(nodes, smg_gs, skr_gs, skr6_gs, smg_he, skr_he, skr6_he)
 
 pemg_si=pedata(mg_si, nodes)
 pekr_si=pedata(kr_si,nodes)
 pekr6_si=pedata(kr6_si,nodes)
 si_rat1=kr_si/mg_si
 si_rat2=kr6_si/mg_si
-#make2plots(nodes, pemg_si, pekr_si, pekr6_si, si_rat1, si_rat2, "semi-implicit")
+make2plots(nodes, pemg_si, pekr_si, pekr6_si, si_rat1, si_rat2, "semi-implicit")
 
 #print mg_si/mg_ts
 #print kr_si/kr_ts
