@@ -113,3 +113,5 @@ EG_solver_pe=pedata(EG_solver,nodes)
 plot5pe(nodes,EG_ts_pe, MG_phys2_pe, MG_adv_pe, EG_solver_pe, MG_phys1_pe, MG_ts_pe, MG_solver_pe)
 
 plotrdata(nodes,EG_ts, MG_ts, MG_adv, MG_phys2, MG_phys1, EG_solver, MG_solver)
+print(MG_adv/EG_ts)
+print(MG_adv/MG_ts)
