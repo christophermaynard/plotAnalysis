@@ -1,0 +1,7 @@
+# intel container
+# thing C1152/P1296 C1152/P5184 C2304/P5184
+617.80 192.24 702.55 # ts
+484.630 152.11 563.61 # semi-impl solver
+194.66 51.51 206.89 # inner/helmholtz solve
+69.66 16.7 72.70 #adv
+51.4 12.92 54.17 #mom adv
