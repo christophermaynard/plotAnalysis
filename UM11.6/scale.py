@@ -29,17 +29,17 @@ def plot5pe(x, y1, y2, y3, y4, y5, y6, y7):
     width6=0.075*x*0.8
     width7=0.075*x*1.28
    
-    rects1 = ax.bar(0.875*x, y1, width1, color='saddlebrown',label="time-step",edgecolor='black')
-    rects2 = ax.bar(0.805*x, y6, width6, color='saddlebrown', label="MG time-step", edgecolor='black',hatch='//')
+#    rects1 = ax.bar(0.875*x, y1, width1, color='saddlebrown',label="time-step",edgecolor='black')
+#    rects2 = ax.bar(0.805*x, y6, width6, color='saddlebrown', label="MG time-step", edgecolor='black',hatch='//')
+    rects1 = ax.bar(0.875*x, y6, width1, color='saddlebrown', label="time-step", edgecolor='black',hatch='//')
+
+    rects2 = ax.bar(0.95*x, y2, width2, color='hotpink',label="fast phys",edgecolor='black')
+    rects3 = ax.bar(1.025*x, y5, width3, color='gold',label="slow phys",edgecolor='black')    
+    rects4 = ax.bar(1.1*x, y3, width4, color='firebrick',label="advection",edgecolor='black')
+    rects5 = ax.bar(1.185*x, y7, width5, color='coral',label="solver",edgecolor='black')
     
-    rects3 = ax.bar(0.95*x, y2, width2, color='peru',label="fast phys",edgecolor='black')
-    rects4 = ax.bar(1.025*x, y3, width3, color='firebrick',label="advection",edgecolor='black')
-    rects5 = ax.bar(1.1*x, y5, width5, color='goldenrod',label="slow phys",edgecolor='black')
-
-
-
-    rects6 = ax.bar(1.185*x, y4, width4, color='coral',label="solver",edgecolor='black')    
-    rects7 = ax.bar(1.28*x, y7, width7, color='coral',label="MG solver",edgecolor='black',hatch='//')
+#    rects6 = ax.bar(1.185*x, y4, width4, color='coral',label="solver",edgecolor='black')    
+#    rects7 = ax.bar(1.28*x, y7, width7, color='coral',label="MG solver",edgecolor='black',hatch='//')
 
     ax.set_xscale('log')
     ax.minorticks_on()
@@ -112,6 +112,6 @@ EG_solver_pe=pedata(EG_solver,nodes)
 
 plot5pe(nodes,EG_ts_pe, MG_phys2_pe, MG_adv_pe, EG_solver_pe, MG_phys1_pe, MG_ts_pe, MG_solver_pe)
 
-plotrdata(nodes,EG_ts, MG_ts, MG_adv, MG_phys2, MG_phys1, EG_solver, MG_solver)
+#plotrdata(nodes,EG_ts, MG_ts, MG_adv, MG_phys2, MG_phys1, EG_solver, MG_solver)
 print(MG_adv/EG_ts)
 print(MG_adv/MG_ts)
