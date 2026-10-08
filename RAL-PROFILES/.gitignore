@@ -1,0 +1,5 @@
+# Raw per-rank Vernier output: ~29k files, 370 MB across run1 and run3.
+# Regenerate by re-running the suite with FETCH_VERNIER=True, then
+# summarise_vernier.py. Only the collated summaries are tracked.
+run*/run_lfric_atm_*/
+*.tar
