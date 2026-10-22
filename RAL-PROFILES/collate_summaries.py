@@ -16,6 +16,22 @@ RANKS = {
     "8x8_1T": 7056, "8x8_2T": 3528, "8x8_4T": 1764,
 }
 
+# ukv_MG (960 x 1024) uses panel_decomp custom: tag -> (xproc, yproc).
+UKV_NX, UKV_NY = 960, 1024
+UKV_DECOMP = {
+    "32x32_1T": (30, 32), "32x32_2T": (15, 32), "32x32_4T": (15, 16),
+    "32x16_1T": (30, 64), "32x16_2T": (30, 32), "32x16_4T": (15, 32),
+    "16x16_1T": (60, 64), "16x16_2T": (30, 64), "16x16_4T": (30, 32),
+    "16x8_1T": (60, 128), "16x8_2T": (60, 64), "16x8_4T": (30, 64),
+    "8x8_1T": (120, 128), "8x8_2T": (60, 128), "8x8_4T": (60, 64),
+}
+
+# C896 cubed sphere, panel_decomp custom per panel: tag -> (xproc, yproc).
+C896_N = 896
+C896_DECOMP = {
+    "32x32_2T": (28, 28), "32x16_2T": (28, 56), "16x16_2T": (56, 56),
+}
+
 METRICS = [
     "Total Min(s)", "Total Mean(s)", "Total Max(s)",
     "Self Min(s)", "Self Mean(s)", "Self Max(s)",
@@ -58,12 +74,33 @@ def main():
                         choices=METRICS,
                         help="Metric used for the wide routine x decomposition "
                              "table.")
+    parser.add_argument("--mesh", choices=["672", "ukv", "c896"],
+                        default="672", help="Mesh the runs used.")
     args = parser.parse_args()
+
+    if args.mesh == "c896":
+        ranks_of = {t: 6 * x * y for t, (x, y) in C896_DECOMP.items()}
+
+        def geometry(tag):
+            nx, ny = C896_DECOMP[tag]
+            return nx, ny, C896_N // nx, C896_N // ny
+    elif args.mesh == "ukv":
+        ranks_of = {t: x * y for t, (x, y) in UKV_DECOMP.items()}
+
+        def geometry(tag):
+            nx, ny = UKV_DECOMP[tag]
+            return nx, ny, UKV_NX // nx, UKV_NY // ny
+    else:
+        ranks_of = RANKS
+
+        def geometry(tag):
+            nx, ny = panel_decomp(RANKS[tag])
+            return nx, ny, MESH // nx, MESH // ny
 
     tables = {}
     for path in sorted(args.summary_dir.glob("*.txt")):
         tag = path.stem
-        if tag not in RANKS:
+        if tag not in ranks_of:
             continue
         tables[tag] = read_table(path)
 
@@ -73,7 +110,7 @@ def main():
     # Order by cores then threads so subgroups stay together.
     def sort_key(tag):
         threads = int(tag.split("_")[1].rstrip("T"))
-        return (RANKS[tag] * threads, threads)
+        return (ranks_of[tag] * threads, threads)
 
     tags = sorted(tables, key=sort_key)
 
@@ -87,9 +124,8 @@ def main():
         for tag in tags:
             subgroup, thread_str = tag.split("_")
             threads = int(thread_str.rstrip("T"))
-            ranks = RANKS[tag]
-            nx, ny = panel_decomp(ranks)
-            lx, ly = MESH // nx, MESH // ny
+            ranks = ranks_of[tag]
+            nx, ny, lx, ly = geometry(tag)
             for routine, metrics in tables[tag].items():
                 writer.writerow([
                     tag, subgroup, threads, ranks, ranks * threads,

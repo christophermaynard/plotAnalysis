@@ -1,0 +1,11 @@
+C896 nwp_gal10 no_diags, 2 OpenMP threads, 720 timesteps, Total Max(s)
+Category                         49 nodes   98 nodes  196 nodes  Speedup
+                                 32x32_2T   32x16_2T   16x16_2T  49->196
+--------------------------------------------------------------------------
+__lfric_atm__                       836.3      450.4      296.9    2.82x
+__setup__                            36.2       43.4       64.9    0.56x
+semi_implicit_timestep              799.2      405.8      229.4    3.48x
+mixed_solver                        164.2       86.7       47.7    3.45x
+transport (dynamics.transport)      126.7       68.4       47.5    2.67x
+slow_physics                        166.9       86.1       51.7    3.23x
+fast_physics                        190.7       91.9       47.9    3.99x
