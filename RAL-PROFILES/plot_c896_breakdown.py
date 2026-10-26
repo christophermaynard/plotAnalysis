@@ -21,9 +21,8 @@ TIMESTEP_PARTS = {
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("csv", type=Path, help="vernier_long.csv")
-    parser.add_argument("-o", "--output", type=Path,
-                        help="Output image (default: c896_breakdown.png "
-                             "beside the csv).")
+    parser.add_argument("-o", "--outdir", type=Path,
+                        help="Output directory (default: beside the csv).")
     args = parser.parse_args()
 
     df = pd.read_csv(args.csv)
@@ -32,7 +31,8 @@ def main():
     nodes = [str(n) for n in TAGS.values()]
     x = np.arange(len(nodes))
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    fig1, ax1 = plt.subplots(figsize=(6, 5))
+    fig2, ax2 = plt.subplots(figsize=(6, 5))
 
     width = 0.8 / len(TIMESTEP_PARTS)
     for i, (routine, label) in enumerate(TIMESTEP_PARTS.items()):
@@ -61,11 +61,14 @@ def main():
         ax.legend(loc="upper left", ncol=2, fontsize=8)
         ax.grid(axis="y", alpha=0.3)
 
-    fig.suptitle("C896 nwp_gal10 no_diags, 2 OpenMP threads, 720 timesteps")
-    fig.tight_layout()
-    out = args.output or args.csv.with_name("c896_breakdown.png")
-    fig.savefig(out, dpi=150)
-    print(f"wrote {out}")
+    outdir = args.outdir or args.csv.parent
+    for fig, name in ((fig1, "c896_breakdown_timestep.png"),
+                      (fig2, "c896_breakdown_setup.png")):
+        fig.suptitle("C896 nwp_gal10 no_diags, 2 OpenMP threads, "
+                     "720 timesteps")
+        fig.tight_layout()
+        fig.savefig(outdir / name, dpi=150)
+        print(f"wrote {outdir / name}")
 
 
 if __name__ == "__main__":
