@@ -55,6 +55,17 @@ def panel_decomp(ranks):
     return max(candidates)
 
 
+def xios_layout(tag):
+    """(xios_ranks, xios_nodes) from _xios<N>n (16/node), _xios<N>r (8/node) or _xios<N>r<M>n."""
+    suffix = tag.split("_xios")[1]
+    if "r" in suffix:
+        ranks, nodes = suffix.split("r")
+        ranks = int(ranks)
+        return ranks, int(nodes[:-1]) if nodes else -(-ranks // 8)
+    count = int(suffix[:-1])
+    return 16 * count, count
+
+
 def read_table(path):
     """Parse a summarise-vernier table into {routine: {metric: value}}."""
     rows = []
@@ -74,9 +85,12 @@ def main():
                         choices=METRICS,
                         help="Metric used for the wide routine x decomposition "
                              "table.")
-    parser.add_argument("--mesh", choices=["672", "ukv", "c896"],
+    parser.add_argument("--mesh", choices=["672", "ukv", "ukv_xios", "c896"],
                         default="672", help="Mesh the runs used.")
     args = parser.parse_args()
+
+    def base(tag):
+        return tag.split("_xios")[0]
 
     if args.mesh == "c896":
         ranks_of = {t: 6 * x * y for t, (x, y) in C896_DECOMP.items()}
@@ -84,11 +98,11 @@ def main():
         def geometry(tag):
             nx, ny = C896_DECOMP[tag]
             return nx, ny, C896_N // nx, C896_N // ny
-    elif args.mesh == "ukv":
+    elif args.mesh in ("ukv", "ukv_xios"):
         ranks_of = {t: x * y for t, (x, y) in UKV_DECOMP.items()}
 
         def geometry(tag):
-            nx, ny = UKV_DECOMP[tag]
+            nx, ny = UKV_DECOMP[base(tag)]
             return nx, ny, UKV_NX // nx, UKV_NY // ny
     else:
         ranks_of = RANKS
@@ -97,20 +111,23 @@ def main():
             nx, ny = panel_decomp(RANKS[tag])
             return nx, ny, MESH // nx, MESH // ny
 
+    xios = args.mesh == "ukv_xios"
+
     tables = {}
     for path in sorted(args.summary_dir.glob("*.txt")):
         tag = path.stem
-        if tag not in ranks_of:
+        if base(tag) not in ranks_of or xios != ("_xios" in tag):
             continue
         tables[tag] = read_table(path)
 
     if not tables:
         raise SystemExit(f"No recognised summary tables in {args.summary_dir}")
 
-    # Order by cores then threads so subgroups stay together.
+    # Order by cores then threads (then XIOS ranks) so subgroups stay together.
     def sort_key(tag):
         threads = int(tag.split("_")[1].rstrip("T"))
-        return (ranks_of[tag] * threads, threads)
+        xr = xios_layout(tag)[0] if xios else 0
+        return (ranks_of[base(tag)] * threads, threads, xr)
 
     tags = sorted(tables, key=sort_key)
 
@@ -119,18 +136,24 @@ def main():
         writer = csv.writer(out)
         writer.writerow([
             "decomposition", "subgroup", "threads", "mpi_ranks", "cores",
-            "nx", "ny", "local_nx", "local_ny", "columns_per_rank", "routine",
-        ] + METRICS)
+            "nx", "ny", "local_nx", "local_ny", "columns_per_rank",
+        ] + (["xios_ranks", "xios_nodes", "xios_per_node"] if xios else [])
+          + ["routine"] + METRICS)
         for tag in tags:
-            subgroup, thread_str = tag.split("_")
+            subgroup, thread_str = base(tag).split("_")
             threads = int(thread_str.rstrip("T"))
-            ranks = ranks_of[tag]
+            ranks = ranks_of[base(tag)]
             nx, ny, lx, ly = geometry(tag)
+            extra = []
+            if xios:
+                xr, xn = xios_layout(tag)
+                extra = [xr, xn, xr // xn]
             for routine, metrics in tables[tag].items():
                 writer.writerow([
                     tag, subgroup, threads, ranks, ranks * threads,
-                    nx, ny, lx, ly, lx * ly, routine,
-                ] + [metrics.get(m, "") for m in METRICS])
+                    nx, ny, lx, ly, lx * ly,
+                ] + extra + [routine]
+                  + [metrics.get(m, "") for m in METRICS])
 
     # Wide table: every routine seen anywhere, blank where a tag lacks it.
     routines = sorted({r for t in tables.values() for r in t})

@@ -1,0 +1,10 @@
+UKV 16x16, single thread (1T): 3840 MPI ranks on 20 model nodes
+Total Max(s) vs XIOS server layout (ukv_xios + ukv_xios8pn)
+
+routine                              lfric_xios.read_fldg  __setup__  __lfric_atm__
+xios_ranks xios_nodes xios_per_node                                                
+16         2          8                             126.3      142.2          263.1
+32         2          16                             75.4       93.6          204.6
+           4          8                              62.3       77.3          199.6
+64         4          16                             41.0       58.5          160.1
+           8          8                              31.9       50.9          150.1
